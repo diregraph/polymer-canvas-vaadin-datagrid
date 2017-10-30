@@ -1,0 +1,77 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<script src="../bower_components/canvas-datagrid/dist/canvas-datagrid.debug.js"></script>
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-view2">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+        </style>
+
+        <custom-style>
+            <style is="custom-style">
+                .grid {
+                    --cdg-height: 74%;
+                    --cdg-width: 97%;
+                    --cdg-cell-color: red;
+                    --cdg-cell-background-color: lightyellow;
+                    --cdg-active-cell-background-color: burlywood;
+                    --cdg-background-color: white;
+                }
+            </style>
+        </custom-style>
+
+        <div class="card">
+            <iron-ajax
+                    auto
+                    url={{fullURL}}
+                    handle-as="json"
+                    last-response="{{users}}"
+            >
+            </iron-ajax>
+            <div class="circle">2</div>
+            <h1>View Two</h1>
+            <canvas-datagrid
+                    class="grid"
+                    selectionmode="row"
+                    style="--cdg-cell-color: grey;"
+                    data=[[users]]
+            >
+            </canvas-datagrid>
+        </div>
+    </template>
++
+    <script>
+        class MyView2 extends Polymer.Element {
+            static get is() {
+                return 'my-view2';
+            }
+
+            static get properties() {
+                return {
+                    url: String,
+
+                    limit: String,
+
+                    offset: String,
+
+                    fullURL: {
+                        type: String,
+                        computed: 'computeFullURL(url, limit, offset)'
+                    }
+                }
+            }
+
+            computeFullURL(url, limit, offset) {
+                return url + '?$limit=' +limit+'&$offset='+offset;
+            }
+        }
+
+        window.customElements.define(MyView2.is, MyView2);
+    </script>
+</dom-module>

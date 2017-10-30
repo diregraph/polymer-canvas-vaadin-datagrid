@@ -1,0 +1,77 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+<dom-module id="my-view1">
+    <template is="dom-bind">
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+        </style>
+        <custom-style>
+            <style is="custom-style">
+                input[readonly] {
+                    border: 2px solid transparent;
+                }
+
+                input {
+                    font: inherit;
+                }
+            </style>
+        </custom-style>
+
+        <div class="card">
+            <h1>Data Grid</h1>
+            <iron-ajax auto url="https://randomuser.me/api?results=100" handle-as="json"
+                       last-response="{{users}}"></iron-ajax>
+            <paper-checkbox checked="{{editing}}" style="margin-bottom: 20px">Enable Editing</paper-checkbox>
+            <vaadin-grid aria-label="Two-way Binding Example" items="[[users.results]]">
+                <vaadin-grid-column>
+                    <template class="header">Profile Pic</template>
+                    <template>
+                        <img src="{{item.picture.thumbnail}}" style="width: 24px">
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">First Name</template>
+                    <template>
+                        <input value="{{item.name.first::input}}" readonly$="[[!editing]]">
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">Last Name</template>
+                    <template>
+                        <input value="{{item.name.last::input}}" readonly$="[[!editing]]">
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">Phone</template>
+                    <template>
+                        <div>[[item.phone]]</div>
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column width="200px">
+                    <template class="header">Email</template>
+                    <template>
+                        <div>[[item.name.first]].[[item.name.last]]@example.com</div>
+                    </template>
+                </vaadin-grid-column>
+            </vaadin-grid>
+        </div>
+    </template>
+
+    <script>
+        class MyView1 extends Polymer.Element {
+            static get is() {
+                return 'my-view1';
+            }
+        }
+
+        window.customElements.define(MyView1.is, MyView1);
+    </script>
+</dom-module>
